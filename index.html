@@ -7,16 +7,24 @@
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             fetch('http://195.201.131.232:51657/abci_info')
-                .then(response => response.json())  // Eğer gelen veri JSON formatında ise
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json().catch(() => response.text());
+                })
                 .then(data => {
-                    // Veri alındıktan sonra, bunu HTML elemanına ekleyelim
                     const dataContainer = document.getElementById('data-container');
-                    dataContainer.innerHTML = JSON.stringify(data, null, 2);  // Veriyi biçimlendirilmiş JSON olarak göster
+                    if (typeof data === 'string') {
+                        dataContainer.innerHTML = data;
+                    } else {
+                        dataContainer.innerHTML = JSON.stringify(data, null, 2);
+                    }
                 })
                 .catch(error => {
                     console.error('Veri çekme hatası:', error);
                     const dataContainer = document.getElementById('data-container');
-                    dataContainer.innerHTML = 'Veri alınamadı.';
+                    dataContainer.innerHTML = 'Veri alınamadı: ' + error.message;
                 });
         });
     </script>
