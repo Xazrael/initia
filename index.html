@@ -11,26 +11,27 @@
                     if (!response.ok) {
                         throw new Error('Network response was not ok ' + response.statusText);
                     }
-                    return response.json().catch(() => response.text());
+                    return response.json();
                 })
                 .then(data => {
-                    const dataContainer = document.getElementById('data-container');
-                    if (typeof data === 'string') {
-                        dataContainer.innerHTML = data;
-                    } else {
-                        dataContainer.innerHTML = JSON.stringify(data, null, 2);
-                    }
+                    const result = data.result.response;
+                    document.getElementById('inita-version').textContent = `Inita version: ${result.version}`;
+                    document.getElementById('block-height').textContent = `Block Height: ${result.last_block_height}`;
+                    document.getElementById('block-hash').textContent = `Block Hash: ${result.last_block_app_hash}`;
                 })
                 .catch(error => {
                     console.error('Veri çekme hatası:', error);
-                    const dataContainer = document.getElementById('data-container');
-                    dataContainer.innerHTML = 'Veri alınamadı22: ' + error.message;
+                    document.getElementById('data-container').textContent = 'Veri alınamadı: ' + error.message;
                 });
         });
     </script>
 </head>
 <body>
     <h1>Veriler</h1>
-    <pre id="data-container">Veriler yükleniyor...</pre>
+    <div id="data-container">
+        <p id="inita-version">Veriler yükleniyor...</p>
+        <p id="block-height"></p>
+        <p id="block-hash"></p>
+    </div>
 </body>
 </html>
