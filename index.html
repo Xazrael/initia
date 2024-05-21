@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Node RPC Verisi Görüntüleyici</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Veri Gösterimi</title>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('http://195.201.131.232:51657/abci_info')
+                .then(response => response.json())  // Eğer gelen veri JSON formatında ise
+                .then(data => {
+                    // Veri alındıktan sonra, bunu HTML elemanına ekleyelim
+                    const dataContainer = document.getElementById('data-container');
+                    dataContainer.innerHTML = JSON.stringify(data, null, 2);  // Veriyi biçimlendirilmiş JSON olarak göster
+                })
+                .catch(error => {
+                    console.error('Veri çekme hatası:', error);
+                    const dataContainer = document.getElementById('data-container');
+                    dataContainer.innerHTML = 'Veri alınamadı.';
+                });
+        });
+    </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Node RPC Verileri</h1>
-        <div id="data-container"></div>
-    </div>
-
-    <script src="script.js"></script>
+    <h1>Veriler</h1>
+    <pre id="data-container">Veriler yükleniyor...</pre>
 </body>
 </html>
